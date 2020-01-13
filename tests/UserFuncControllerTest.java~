@@ -1,0 +1,79 @@
+package Project.tests;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+
+import org.junit.Before;
+import org.junit.Test;
+import Project.*;
+
+
+public class UserFuncControllerTest {
+ private UserUI userUI;
+ private AdminUI adminUI;
+ private LoginUI loginUI;
+ private DBController dbcontroller;
+  private UserFuncController uFuncController;
+ private ArrayList<String> temp;
+   
+ @Before
+ public void init(){
+    userUI = new UserUI();
+    adminUI = new AdminUI();
+    loginUI = new LoginUI();
+    dbcontroller = new DBController();
+    adminUI.addAccount("Bill",  "Smith", "bsmith", "1234567890", 'u');
+    ArrayList<String> temp = new ArrayList<String>();
+ }
+ 
+ //@Test
+ //public void testUserFuncController() {
+ // fail("Not yet implemented");
+ //}
+
+ @Test
+ public void testEditUser()
+ {
+	 Account account = dbcontroller.getAccount("calseth");
+	 
+   assertTrue("Account cannot have a blank 'username' field", 
+              uFuncController.editUser("Colton", "Alseth", "","password",'u','Y').equals("Missing username, password, or type"));
+   assertTrue("Account cannot have a blank 'password' field", 
+              uFuncController.editUser("Colton", "Alseth", "calseth","",'u','Y').equals("Missing username, password, or type"));
+   assertTrue("Account cannot have a blank 'type' field", 
+              uFuncController.editUser("Colton", "Alseth", "calseth","password",' ','Y').equals("Missing username, password, or type"));
+   
+   assertFalse("Accounts first name is not 'David'", account.getFirstName().equals("David"));
+   assertTrue("Accounts first name was changed succesfully", 
+              uFuncController.editUser("David", "Alseth", "calseth","password",'u','n').equals("Edit Successful!"));
+   assertTrue("Accounts first name has been changed to 'David'", account.getFirstName().equals("David"));
+   
+   assertFalse("Accounts last name is not 'Allen'", account.getFirstName().equals("Allen"));
+   assertTrue("Accounts last name was changed succesfully", 
+              uFuncController.editUser("Colton", "Allen", "calseth","password",'u','n').equals("Edit Successful!"));
+   assertTrue("Accounts last name has been changed to 'Allen'", account.getFirstName().equals("Allen"));
+   
+   assertFalse("Accounts password is not 'password1'", account.getPassword().equals("password1"));
+   assertTrue("Accounts password was changed succesfully", 
+              uFuncController.editUser("Colton", "Alseth", "calseth","password1",'u','n').equals("Edit Successful!"));
+   assertTrue("Accounts password has been changed to 'password1'", account.getPassword().equals("password1"));
+   
+ }
+   
+   
+
+ @Test
+ public void testRemoveSchool() {
+  dbcontroller.saveSchool("zakluetmer", "QUEENS");
+  dbcontroller.removeSchool("zakluetmer", "QUEENS");
+  ArrayList<String> temp = dbcontroller.getUserSavedSchools("zakluetmer");
+  assertFalse(dbcontroller.isSchoolSaved("QUEENS"));
+ }
+
+ //@Test
+ //public void testSaveSchool() {
+ // fail("Not yet implemented");
+ //}
+
+}
